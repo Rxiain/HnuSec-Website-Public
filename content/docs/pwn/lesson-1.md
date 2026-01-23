@@ -297,58 +297,89 @@ POP RIP（这条指令实际是不存在的，不能直接向RIP寄存器传送�
 
 ![image-20250114225635311](https://raw.githubusercontent.com/iam0range/picgo/main/image-20250114225635311.png)
 
-## Part2 **内存保护措施**
 
-### ASLR
+## <font style="color:#DF2A3F;">函数调用栈</font>
+•<font style="color:#1a1a1a;">函数调用栈是指程序运行时内存一段连续的区域</font>
 
-ASLR(Address Space Layout Randomization)
+•<font style="color:#1a1a1a;">用来保存函数运行时的状态信息，包括函数参数与局部变量等</font>
 
-```asm
-系统的防护措施，程序装载时生效
-/proc/sys/kernel/randomize_va_space = 0：没有随机化。即关闭 ASLR
-/proc/sys/kernel/randomize_va_space = 1：保留的随机化。共享库、栈、mmap() 以及 VDSO 将被随机化
-/proc/sys/kernel/randomize_va_space = 2：完全的随机化。在randomize_va_space = 1的基础上，通过 brk() 分配的内存空间也将被随机化=
-```
+•<font style="color:#1a1a1a;">称之为“栈”是因为发生函数调用时，调用函数（</font><font style="color:#1a1a1a;">caller</font><font style="color:#1a1a1a;">）的状态被保存在栈内，被调用函数（</font><font style="color:#1a1a1a;">callee</font><font style="color:#1a1a1a;">）的状态被压入调用栈的栈顶</font>
 
-### PIE
+•<font style="color:#1a1a1a;">在函数调用结束时，栈顶的函数（</font><font style="color:#1a1a1a;">callee</font><font style="color:#1a1a1a;">）状态被弹出，栈顶恢复到调用函数（</font><font style="color:#1a1a1a;">caller</font><font style="color:#1a1a1a;">）的状态</font>
 
-PIE (Position-Independent Executable)
+•<font style="color:#1a1a1a;">函数调用栈在内存中从高地址向低地址生长，所以栈顶对应的内存地址在压栈时变小，退栈时变大</font>
 
-```asm
-程序的防护措施，编译时生效
-随机化ELF文件的映射地址
-开启 ASLR 之后，PIE 才会生效
-```
+### <font style="color:black;">栈帧结构概览</font>
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/56806197/1769139603658-d857c5a7-4335-416c-9e84-87fbccf3e590.png)
 
-### The NX bits 
 
-The NX bits (the No-eXecute bits)
+### 函数调用栈过程
+#### 1
+•<font style="color:#1a1a1a;">函数状态主要涉及三个寄存器 —— esp，ebp，eip。esp用来存储函数调用栈的栈顶地址，在压栈和退栈时发生变化。ebp用来存储当前函数状态的基地址，在函数运行时不变，可以用来索引确定函数参数或局部变量的位置。eip用来存储即将执行的程序指令的地址，cpu依照 eip的存储内容读取指令并执行，eip随之指向相邻的下一条指令，如此反复，程序就得以连续执行指令。</font>
 
-```asm
+•<font style="color:#1a1a1a;">下面让我们来看看发生函数调用时，栈顶函数状态以及上述寄存器的变化。变化的核心任务是将调用函数（caller）的状态保存起来，同时创建被调用函数（callee）的状态。  
+</font><!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/56806197/1769139691589-18a3342f-3074-4d84-8acb-542c22dc2564.png)
 
-程序与操作系统的防护措施，编译时决定是否生效，由操作系统实现
-通过在内存页的标识中增加“执行”位, 可以表示该内存页是否可以执行, 若程序代码的 EIP 执行至不可运行的内存页, 则 CPU 将直接拒绝执行“指令”造成程序崩溃
-```
+•<font style="color:#1a1a1a;">首先将被调用函数（callee）的参数按照逆序依次压入栈内。如果被调用函数（callee）不需要参数，则没有这一步骤。这些参数仍会保存在调用函数（caller）的函数状态内，之后压入栈内的数据都会作为被调用函数（callee）的函数状态来保存。</font>
 
-![image-20250114225909912](https://raw.githubusercontent.com/iam0range/picgo/main/image-20250114225909912.png)
+#### <font style="color:#1a1a1a;">2</font>
+<font style="color:#1a1a1a;">然后将调用函数（caller）进行调用之后的下一条指令地址作为返回地址压入栈内。这样调用函数（caller）的 eip（指令）信息得以保存。</font>
 
-### Canary
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/56806197/1769139734077-53312064-870b-4bf2-977a-8ec8b714b706.png)
 
-```asm
-程序的防护措施，编译时生效
-在刚进入函数时，在栈上放置一个标志canary，在函数返回时检测其是否被改变。以达到防护栈溢出的目的
-canary长度为1字长，其位置不一定与ebp/rbp存储的位置相邻，具体得看程序的汇编操作
-```
+#### 3
+<font style="color:#1a1a1a;">再将当前的ebp寄存器的值（也就是调用函数的基地址）压入栈内，并将 ebp寄存器的值更新为当前栈顶的地址。这样调用函数（caller）的 ebp（基地址）信息得以保存。同时，ebp被更新为被调用函数（callee）的基地址。</font>
 
-### RELRO
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/56806197/1769139771941-4f130db0-9388-46f1-b1e2-402e17ac2b4f.png)
 
-RELRO (RELocate Read-Only)
+#### 4
+<font style="color:#1a1a1a;">再之后是将被调用函数（callee）的局部变量等数据压入栈内。</font>
 
-```asm
-程序的防护措施，编译时生效
-部分 RELRO: 在程序装入后, 将其中一些段(如.dynamic)标记为只读, 防止程序的一些重定位信息被修改
-完全 RELRO: 在部分 RELRO 的基础上, 在程序装入时, 直接解析完所有符号并填入对应的值, 此时所有的 GOT 表项都已初始化, 且不装入link_map与_dl_runtime_resolve的地址
-```
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/56806197/1769139813329-27e6aa7a-7c1a-4a6a-ba17-c2c86918b078.png)
+
+#### 5
+•<font style="color:#1a1a1a;">在压栈的过程中，esp寄存器的值不断减小（对应于栈从内存高地址向低地址生长）。压入栈内的数据包括调用参数、返回地址、调用函数的基地址，以及局部变量，其中调用参数以外的数据共同构成了被调用函数（callee）的状态。在发生调用时，程序还会将被调用函数（callee）的指令地址存到 eip寄存器内，这样程序就可以依次执行被调用函数的指令了。</font>
+
+•<font style="color:#1a1a1a;">看过了函数调用发生时的情况，就不难理解函数调用结束时的变化。变化的核心任务是丢弃被调用函数（callee）的状态，并将栈顶恢复为调用函数（caller）的状态。</font>
+
+•<font style="color:#1a1a1a;">首先被调用函数的局部变量会从栈内直接弹出，栈顶会指向被调用函数（callee）的基地址。</font>
+
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/56806197/1769139855260-4fc8fe79-42c8-4306-88fc-96dc64422bc5.png)
+
+#### 6
+<font style="color:#1a1a1a;">然后将基地址内存储的调用函数（caller）的基地址从栈内弹出，并存到 ebp寄存器内。这样调用函数（caller）的 ebp（基地址）信息得以恢复。此时栈顶会指向返回地址。</font>
+
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/56806197/1769139899239-9f35efdc-49f8-47cf-a5e1-c404ba52dfa2.png)
+
+#### 7
+•<font style="color:#1a1a1a;">再将返回地址从栈内弹出，并存到 eip寄存器内。这样调用函数（caller）的 eip（指令）信息得以恢复。</font>
+
+•<font style="color:black;">至此调用函数（caller）的函数状态就全部恢复了，之后就是继续执行调用函数的指令了。</font>
+
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.nlark.com/yuque/0/2026/png/56806197/1769139944209-7cd85538-e5d6-460a-964e-cf79f36a9537.png)
+
+### 传参
+•<font style="color:#c00000;">x86</font>
+
+•<font style="color:black;">使用栈来传递参数</font>
+
+•<font style="color:black;">使用 </font><font style="color:black;">eax</font><font style="color:black;">存放返回值</font>
+
+•<font style="color:#c00000;">amd64</font>
+
+•<font style="color:black;">前</font><font style="color:black;">6</font><font style="color:black;">个参数依次存放于 </font><font style="color:black;">rdi</font><font style="color:black;">、</font><font style="color:black;">rsi</font><font style="color:black;">、</font><font style="color:black;">rdx</font><font style="color:black;">、</font><font style="color:black;">rcx</font><font style="color:black;">、</font><font style="color:black;">r8</font><font style="color:black;">、</font><font style="color:black;">r9 </font><font style="color:black;">寄存器中</font>
+
+<font style="color:black;">第7个以后的参数存放于栈中</font>
+
+
 
 ## Part3 PWN Tools
 
