@@ -123,3 +123,84 @@ export function getRelatedDocs(currentSlug: string[]): { title: string; path: st
 
     return related.slice(0, 5) // Limit to 5 related articles
 }
+
+export function getAllCategoryDocs() {
+    const categories = ['web', 'pwn', 'crypto', 'reverse', 'misc', 'dev', 'others']
+    const result: Record<string, { text: string; link: string }[]> = {}
+
+    categories.forEach(category => {
+        const dirPath = path.join(docsDirectory, category)
+        if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
+            const files = fs.readdirSync(dirPath)
+            const items = files
+                .filter(file => file.endsWith('.md') || file.endsWith('.pdf'))
+                .map(file => {
+                    const name = file
+                    const slug = file.replace(/\.md$/, '')
+                    // For PDFs or other files, we might want a direct link or a wrapper
+                    // For now, assuming standard doc route for MD files
+                    const link = file.endsWith('.md')
+                        ? `/docs/${category}/${slug}`
+                        : `/docs/${category}/${file}` // You might need a public route for raw assets if they aren't processed pages
+
+                    return { text: name, link }
+                })
+            result[category] = items
+        } else {
+            result[category] = []
+        }
+    })
+
+    return result
+}
+
+export interface DirectoryNode {
+    name: string
+    path: string
+    type: 'file' | 'directory'
+    children?: DirectoryNode[]
+}
+
+export function getDirectoryTree(dirPath: string, rootSlug: string = ''): DirectoryNode[] {
+    const fullPath = path.join(docsDirectory, dirPath)
+    if (!fs.existsSync(fullPath)) return []
+
+    const items = fs.readdirSync(fullPath)
+    const nodes: DirectoryNode[] = []
+
+    items.forEach(item => {
+        // Skip hidden files and system files
+        if (item.startsWith('.') || item === 'Intro.assets' || item === 'img') return
+
+        const itemPath = path.join(fullPath, item)
+        const stats = fs.statSync(itemPath)
+        const relativeSlug = rootSlug ? `${rootSlug}/${item}` : item
+
+        if (stats.isDirectory()) {
+            const children = getDirectoryTree(path.join(dirPath, item), relativeSlug)
+            if (children.length > 0) {
+                nodes.push({
+                    name: item,
+                    path: relativeSlug,
+                    type: 'directory',
+                    children
+                })
+            }
+        } else if (item.endsWith('.md')) {
+            const slug = item.replace('.md', '')
+            // Don't include index.md or README.md if preference, but for now include all
+            nodes.push({
+                name: slug === 'Intro' ? '首页' : slug,
+                path: `/docs/${dirPath.replace(/\\/g, '/')}/${slug}`,
+                type: 'file'
+            })
+        }
+    })
+
+    // Sort: Directories first, then files. Or files first?
+    // Let's sort alphabetically but put directories first
+    return nodes.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name)
+        return a.type === 'directory' ? -1 : 1
+    })
+}

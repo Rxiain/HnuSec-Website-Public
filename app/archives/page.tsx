@@ -68,7 +68,7 @@ export default function ArchivesPage() {
             path: "/archives/2025-winter",
             color: "from-cyan-500 to-blue-600",
             bgColor: "bg-cyan-50",
-            participants: 45,
+            participants: 145,
             courses: 12
         },
         {
@@ -81,7 +81,7 @@ export default function ArchivesPage() {
             path: "/archives/2025-summer",
             color: "from-yellow-500 to-orange-500",
             bgColor: "bg-yellow-50",
-            participants: 38,
+            participants: 138,
             courses: 10
         },
         {
@@ -94,16 +94,29 @@ export default function ArchivesPage() {
             path: "/archives/2024-summer",
             color: "from-orange-500 to-red-500",
             bgColor: "bg-orange-50",
-            participants: 52,
+            participants: 152,
             courses: 15
+        },
+        {
+            year: "2018-2024",
+            season: "Legacy",
+            title: "2018-2024 旧版官网",
+            date: "2018-2024",
+            description: "HnuSec 历代官网内容归档。",
+            icon: Archive,
+            path: "/docs/archives/old-site/Intro",
+            color: "from-gray-500 to-slate-600",
+            bgColor: "bg-gray-50",
+            participants: "N/A",
+            courses: "N/A"
         }
     ]
 
     const stats = [
-        { icon: Calendar, value: "3", label: "届培训" },
-        { icon: Users, value: "135+", label: "参与学员" },
-        { icon: BookOpen, value: "37", label: "课程总数" },
-        { icon: Zap, value: "5", label: "培训方向" }
+        { icon: Calendar, value: "8", label: "届培训" },
+        { icon: Users, value: "1350+", label: "参与学员" },
+        { icon: BookOpen, value: "137", label: "课程总数" },
+        { icon: Zap, value: "6", label: "培训方向" }
     ]
 
     return (

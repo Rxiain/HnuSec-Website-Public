@@ -9,10 +9,14 @@ import { MouseTrail } from "@/components/mouse-trail"
 import { CyberParticles } from "@/components/cyber-particles"
 import { BackgroundDecoration } from "@/components/background-decoration"
 import { DocSidebar } from "@/components/doc-sidebar"
+import { MobileDocSidebar } from "@/components/mobile-doc-sidebar"
 import { Footer } from "@/components/footer"
 import { DocThemeToggle } from "@/components/doc-theme-toggle"
+import { ZoomImage } from "@/components/zoom-image"
+import { CodeBlock } from "@/components/code-block"
+import { BackToTop } from "@/components/back-to-top"
 import Link from 'next/link'
-import { ArrowLeft, Home, BookOpen, Clock, Tag, FileText } from 'lucide-react'
+import { ArrowLeft, Home, BookOpen, Clock, Tag, FileText, ChevronRight, ChevronLeft } from 'lucide-react'
 
 // Direction info mapping
 const directionInfo: Record<string, { name: string; color: string; bgColor: string }> = {
@@ -28,74 +32,93 @@ const directionInfo: Record<string, { name: string; color: string; bgColor: stri
 
 // Custom components for markdown rendering
 const MarkdownComponents = {
-    h1: ({ node, ...props }: any) => <h1 id={props.id} className="scroll-mt-24 text-3xl md:text-4xl font-bold text-var-color-5 mb-6 mt-8 border-b border-var-color-5/30 pb-2" {...props} />,
-    h2: ({ node, ...props }: any) => <h2 id={props.id} className="scroll-mt-24 text-2xl md:text-3xl font-bold text-var-color-5/90 mb-4 mt-10 flex items-center gap-2" {...props} />,
-    h3: ({ node, ...props }: any) => <h3 id={props.id} className="scroll-mt-24 text-xl md:text-2xl font-bold text-var-color-4 mb-3 mt-8" {...props} />,
-    h4: ({ node, ...props }: any) => <h4 id={props.id} className="scroll-mt-24 text-lg font-bold text-gray-700 mb-2 mt-6" {...props} />,
-    p: ({ node, ...props }: any) => <div className="text-base leading-relaxed mb-4 text-gray-700" {...props} />,
-    ul: ({ node, ...props }: any) => <ul className="list-disc list-outside ml-6 mb-4 space-y-2 text-gray-700" {...props} />,
-    ol: ({ node, ...props }: any) => <ol className="list-decimal list-outside ml-6 mb-4 space-y-2 text-gray-700" {...props} />,
+    h1: ({ node, ...props }: any) => <h1 id={props.id} className="scroll-mt-24 text-3xl md:text-4xl font-black text-gray-900 mb-6 mt-10 pb-4 border-b border-gray-200" {...props} />,
+    h2: ({ node, ...props }: any) => <h2 id={props.id} className="scroll-mt-24 text-2xl md:text-3xl font-bold text-gray-800 mb-4 mt-12 flex items-center gap-2 group" {...props} >
+        <span className="w-1.5 h-8 bg-var-color-5 rounded-full inline-block mr-2"></span>
+        {props.children}
+    </h2>,
+    h3: ({ node, ...props }: any) => <h3 id={props.id} className="scroll-mt-24 text-xl md:text-2xl font-bold text-gray-800 mb-3 mt-8 flex items-center" {...props} >
+        <span className="text-var-color-5 mr-2 opacity-60">#</span>
+        {props.children}
+    </h3>,
+    h4: ({ node, ...props }: any) => <h4 id={props.id} className="scroll-mt-24 text-lg font-bold text-gray-700 mb-2 mt-6 uppercase tracking-wider" {...props} />,
+
+    p: ({ node, ...props }: any) => <div className="text-base md:text-lg leading-7 mb-6 text-gray-700 font-sans" {...props} />,
+
+    ul: ({ node, ...props }: any) => <ul className="list-disc list-outside ml-6 mb-6 space-y-2 text-gray-700 marker:text-var-color-5" {...props} />,
+    ol: ({ node, ...props }: any) => <ol className="list-decimal list-outside ml-6 mb-6 space-y-2 text-gray-700 marker:text-var-color-5 marker:font-bold" {...props} />,
     li: ({ node, ...props }: any) => <li className="pl-1" {...props} />,
+
     a: ({ node, href, ...props }: any) => (
         <a
             href={href}
-            className="text-var-color-5 hover:underline font-medium break-words inline-flex items-center gap-0.5"
+            className="text-var-color-5 font-medium underline decoration-var-color-5/30 hover:decoration-var-color-5 underline-offset-2 transition-all break-words"
             target={href?.startsWith('http') ? '_blank' : undefined}
             rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
             {...props}
         />
     ),
-    blockquote: ({ node, ...props }: any) => (
-        <blockquote className="border-l-4 border-var-color-5/50 pl-4 py-3 my-6 bg-var-color-5/5 rounded-r-lg text-gray-700" {...props} />
-    ),
-    code: ({ node, inline, className, children, ...props }: any) => {
-        const match = /language-(\w+)/.exec(className || '')
-        const codeString = String(children).replace(/\n$/, '')
 
-        return !inline ? (
-            <div className="relative group my-6 rounded-lg overflow-hidden bg-[#1e1e1e] border border-var-color-5/20 shadow-xl">
-                <div className="flex items-center justify-between px-4 py-2.5 bg-[#2d2d2d] border-b border-[#3d3d3d]">
-                    <div className="flex items-center gap-3">
-                        <div className="flex space-x-2">
-                            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                        </div>
-                        <span className="text-xs text-gray-400 font-mono uppercase tracking-wider">{match ? match[1] : 'code'}</span>
-                    </div>
-                </div>
-                <pre className="p-4 overflow-x-auto text-sm font-mono text-gray-300 leading-relaxed">
-                    <code className={className} {...props}>
-                        {children}
-                    </code>
-                </pre>
-            </div>
-        ) : (
-            <code className="bg-gray-100 text-red-600 px-1.5 py-0.5 rounded text-sm font-mono border border-gray-200" {...props}>
-                {children}
-            </code>
-        )
+    blockquote: ({ node, ...props }: any) => (
+        <blockquote className="relative pl-6 py-4 my-8 bg-gray-50 rounded-r-lg text-gray-700 border-l-4 border-var-color-5 shadow-sm italic" {...props}>
+            <div className="absolute top-2 left-1 text-4xl text-var-color-5 opacity-20 font-serif">"</div>
+            {props.children}
+        </blockquote>
+    ),
+
+    code: ({ node, inline, className, children, ...props }: any) => {
+        return <CodeBlock inline={inline} className={className} {...props}>{children}</CodeBlock>
     },
+
     table: ({ node, ...props }: any) => (
-        <div className="overflow-x-auto my-6 rounded-lg border border-var-color-5/20 shadow-md">
-            <table className="w-full text-left border-collapse bg-white" {...props} />
+        <div className="overflow-x-auto my-8 rounded-xl border border-gray-200 shadow-md">
+            <table className="w-full text-left border-collapse bg-white text-sm md:text-base" {...props} />
         </div>
     ),
-    thead: ({ node, ...props }: any) => <thead className="bg-var-color-5/10" {...props} />,
-    th: ({ node, ...props }: any) => <th className="p-3 font-bold text-var-color-5 border-b border-var-color-5/20" {...props} />,
-    td: ({ node, ...props }: any) => <td className="p-3 border-b border-var-color-5/10" {...props} />,
+    thead: ({ node, ...props }: any) => <thead className="bg-gray-50 border-b border-gray-200" {...props} />,
+    th: ({ node, ...props }: any) => <th className="p-4 font-bold text-gray-900 tracking-wider whitespace-nowrap" {...props} />,
+    tr: ({ node, ...props }: any) => <tr className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors last:border-0" {...props} />,
+    td: ({ node, ...props }: any) => <td className="p-4 text-gray-600 align-top" {...props} />,
+
     img: ({ node, alt, ...props }: any) => (
-        <figure className="my-6">
-            <img
-                className="rounded-lg shadow-lg max-w-full h-auto border border-gray-200 hover:border-var-color-5/50 transition-colors mx-auto"
-                alt={alt}
-                {...props}
-            />
-            {alt && <figcaption className="text-center text-sm text-gray-500 mt-2">{alt}</figcaption>}
+        <figure className="my-10 flex flex-col items-center">
+            <ZoomImage alt={alt} {...props} />
+            {alt && (
+                <figcaption className="text-center text-sm text-gray-500 mt-3 font-medium flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-gray-400"></span>
+                    {alt}
+                    <span className="w-1 h-1 rounded-full bg-gray-400"></span>
+                </figcaption>
+            )}
         </figure>
     ),
-    hr: ({ node, ...props }: any) => <hr className="my-8 border-t border-var-color-5/20" {...props} />,
+
+    hr: ({ node, ...props }: any) => (
+        <div className="my-12 flex items-center justify-center opacity-30">
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+            <div className="mx-4 text-gray-400">***</div>
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+        </div>
+    ),
     pre: ({ node, ...props }: any) => <span {...props} />,
+}
+
+interface NavItem {
+    title: string
+    path: string
+}
+
+// Utility to flatten directory tree into a linear list for navigation
+function flattenTree(nodes: any[]): NavItem[] {
+    let result: NavItem[] = []
+    nodes.forEach(node => {
+        if (node.type === 'file') {
+            result.push({ title: node.name, path: node.path })
+        } else if (node.children) {
+            result = result.concat(flattenTree(node.children))
+        }
+    })
+    return result
 }
 
 export default async function DocPage({ params }: { params: { slug?: string[] } }) {
@@ -137,11 +160,47 @@ export default async function DocPage({ params }: { params: { slug?: string[] } 
 
     // Extract title from first h1 or use slug
     const titleMatch = doc.content.match(/^#\s+(.+)$/m)
-    const docTitle = titleMatch ? titleMatch[1] : slug[slug.length - 1]
+    const docTitle = titleMatch ? titleMatch[1] : decodeURIComponent(slug[slug.length - 1])
 
     // Estimate reading time (assuming 200 words per minute for Chinese)
     const wordCount = doc.content.length
     const readingTime = Math.max(1, Math.ceil(wordCount / 400))
+
+    // Special handling for old site archive: get full tree
+    let directoryTree = undefined
+    if (slug[0] === 'archives' && slug[1] === 'old-site') {
+        const { getDirectoryTree } = require('@/lib/docs')
+        directoryTree = getDirectoryTree('archives/old-site', 'archives/old-site')
+    }
+
+    // Determine Prev/Next Navigation
+    let prevItem: NavItem | null = null
+    let nextItem: NavItem | null = null
+
+    if (directoryTree) {
+        // Use full tree for archives
+        const flatList = flattenTree(directoryTree)
+        // Fuzzy match current path (slug join vs path) or just simple normalization
+        // The tree paths start with /docs/archives/old-site...
+        const currentPath = `/docs/${slug.join('/')}`
+        const currentIndex = flatList.findIndex(item => item.path === currentPath || item.path === decodeURIComponent(currentPath))
+
+        if (currentIndex >= 0) {
+            if (currentIndex > 0) prevItem = flatList[currentIndex - 1]
+            if (currentIndex < flatList.length - 1) nextItem = flatList[currentIndex + 1]
+        }
+    } else {
+        // Use relatedDocs (current directory peers) for regular docs
+        // Re-read relatedDocs to find index. relatedDocs only has peers.
+        // Assuming relatedDocs are in order.
+        const currentPath = `/docs/${slug.join('/')}`
+        const currentIndex = relatedDocs.findIndex(d => d.path === currentPath || d.path === decodeURIComponent(currentPath))
+
+        if (currentIndex >= 0) {
+            if (currentIndex > 0) prevItem = relatedDocs[currentIndex - 1]
+            if (currentIndex < relatedDocs.length - 1) nextItem = relatedDocs[currentIndex + 1]
+        }
+    }
 
     return (
         <main className="relative min-h-screen bg-[#f0f0f5] text-black">
@@ -149,6 +208,13 @@ export default async function DocPage({ params }: { params: { slug?: string[] } 
             <TerminalButton />
             <CyberParticles />
             <BackgroundDecoration />
+            <MobileDocSidebar
+                toc={toc}
+                relatedDocs={relatedDocs}
+                currentDirection={currentDirection}
+                tree={directoryTree}
+                activePath={`/docs/${slug.join('/')}`}
+            />
 
             <div className="absolute inset-0 z-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBoMzB2MzBIMzB6TTAgMzBoMzB2MzBIMHoiIGZpbGw9IiM2YjZiZmYwNSIgZmlsbC1vcGFjaXR5PSIuMDUiLz48cGF0aCBkPSJNMzAgMGgzMHYzMEgzMHpNMCAwaDMwdjMwSDB6IiBmaWxsPSIjNmI2YmZmMDUiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-30 pointer-events-none"></div>
 
@@ -171,7 +237,7 @@ export default async function DocPage({ params }: { params: { slug?: string[] } 
                     </Link>
                     <DocThemeToggle />
                     {/* Breadcrumb */}
-                    <div className="flex items-center gap-1 text-sm text-gray-500 font-mono ml-auto">
+                    <div className="hidden sm:flex items-center gap-1 text-sm text-gray-500 font-mono ml-auto">
                         <FileText className="w-4 h-4" />
                         <span>docs</span>
                         {slug.map((s, i) => (
@@ -215,19 +281,43 @@ export default async function DocPage({ params }: { params: { slug?: string[] } 
                                 {doc.content}
                             </ReactMarkdown>
 
-                            {/* Article Footer */}
-                            <div className="mt-12 pt-6 border-t border-var-color-5/10">
-                                <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-gray-500">
-                                    <div className="flex items-center gap-2">
-                                        <span>感谢阅读 🎉</span>
-                                    </div>
-                                    <Link
-                                        href="/archives"
-                                        className="text-var-color-5 hover:underline flex items-center gap-1"
-                                    >
-                                        查看更多文章
-                                        <ArrowLeft className="w-4 h-4 rotate-180" />
-                                    </Link>
+                            {/* Article Footer & Navigation */}
+                            <div className="mt-12 pt-8 border-t border-var-color-5/10">
+                                {/* Prev/Next Navigation Buttons */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {prevItem ? (
+                                        <Link
+                                            href={prevItem.path}
+                                            className="group flex flex-col items-start p-4 bg-white border border-gray-200 rounded-xl hover:border-var-color-5 transition-all hover:shadow-md"
+                                        >
+                                            <span className="text-xs text-gray-400 mb-1 flex items-center group-hover:text-var-color-5">
+                                                <ChevronLeft className="w-3 h-3 mr-1" />
+                                                PREVIOUS
+                                            </span>
+                                            <span className="font-bold text-gray-700 group-hover:text-var-color-5 line-clamp-1">
+                                                {prevItem.title}
+                                            </span>
+                                        </Link>
+                                    ) : (
+                                        <div />
+                                    )}
+
+                                    {nextItem ? (
+                                        <Link
+                                            href={nextItem.path}
+                                            className="group flex flex-col items-end text-right p-4 bg-white border border-gray-200 rounded-xl hover:border-var-color-5 transition-all hover:shadow-md"
+                                        >
+                                            <span className="text-xs text-gray-400 mb-1 flex items-center group-hover:text-var-color-5">
+                                                NEXT
+                                                <ChevronRight className="w-3 h-3 ml-1" />
+                                            </span>
+                                            <span className="font-bold text-gray-700 group-hover:text-var-color-5 line-clamp-1">
+                                                {nextItem.title}
+                                            </span>
+                                        </Link>
+                                    ) : (
+                                        <div />
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -238,11 +328,14 @@ export default async function DocPage({ params }: { params: { slug?: string[] } 
                         toc={toc}
                         relatedDocs={relatedDocs}
                         currentDirection={currentDirection}
+                        tree={directoryTree}
+                        activePath={`/docs/${slug.join('/')}`}
                     />
                 </div>
             </div>
 
             <Footer />
+            <BackToTop />
         </main>
     )
 }
