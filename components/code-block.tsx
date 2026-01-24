@@ -25,7 +25,7 @@ export function CodeBlock({ inline, className, children, ...props }: any) {
 
     if (isLightBlock) {
         return (
-            <code className="bg-gray-100 text-[#d63384] px-2 py-1 rounded text-[0.95em] font-mono border border-gray-200 block w-fit my-1.5" {...props}>
+            <code className="bg-[#f4f5f9] text-[#405060] px-1.5 py-0.5 rounded-[4px] text-[0.9em] font-mono border border-[#e2e6ea] inline-block align-middle mx-0.5" {...props}>
                 {children}
             </code>
         )
@@ -74,7 +74,7 @@ export function CodeBlock({ inline, className, children, ...props }: any) {
             </div>
         </div>
     ) : (
-        <code className="bg-gray-100 text-[#d63384] px-1.5 py-0.5 rounded text-[0.9em] font-mono border border-gray-200 mx-0.5 align-middle break-words" {...props}>
+        <code className="bg-[#f4f5f9] text-[#405060] px-1.5 py-0.5 rounded-[4px] text-[0.9em] font-mono border border-[#e2e6ea] mx-0.5 align-middle break-words" {...props}>
             {children}
         </code>
     )
