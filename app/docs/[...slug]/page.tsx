@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeSlug from 'rehype-slug'
-import { getDocBySlug, extractHeadings, getRelatedDocs } from '@/lib/docs'
+import { getDocBySlug, extractHeadings, getRelatedDocs, getAllDocs } from '@/lib/docs'
 import { TerminalButton } from "@/components/terminal-button"
 import { MouseTrail } from "@/components/mouse-trail"
 import { CyberParticles } from "@/components/cyber-particles"
@@ -15,6 +15,7 @@ import { DocThemeToggle } from "@/components/doc-theme-toggle"
 import { ZoomImage } from "@/components/zoom-image"
 import { CodeBlock } from "@/components/code-block"
 import { BackToTop } from "@/components/back-to-top"
+import { DocSearch } from "@/components/doc-search"
 import Link from 'next/link'
 import { ArrowLeft, Home, BookOpen, Clock, Tag, FileText, ChevronRight, ChevronLeft } from 'lucide-react'
 
@@ -121,6 +122,26 @@ function flattenTree(nodes: any[]): NavItem[] {
     return result
 }
 
+export async function generateMetadata({ params }: { params: { slug?: string[] } }) {
+    const { slug } = await params
+
+    if (!slug || slug.length === 0) return { title: 'Documentation | HnuSec' }
+
+    try {
+        const doc = getDocBySlug(slug)
+        // Extract title from first h1 or use slug
+        const titleMatch = doc.content.match(/^#\s+(.+)$/m)
+        const docTitle = titleMatch ? titleMatch[1] : decodeURIComponent(slug[slug.length - 1])
+
+        return {
+            title: `${docTitle} | HnuSec Docs`,
+            description: `Document: ${docTitle} - HnuSec Documentation`,
+        }
+    } catch (e) {
+        return { title: 'Document Not Found | HnuSec' }
+    }
+}
+
 export default async function DocPage({ params }: { params: { slug?: string[] } }) {
     const { slug } = await params
 
@@ -157,6 +178,7 @@ export default async function DocPage({ params }: { params: { slug?: string[] } 
     const relatedDocs = getRelatedDocs(slug)
     const currentDirection = slug[0] || 'docs'
     const dirInfo = directionInfo[currentDirection.toLowerCase()] || { name: currentDirection, color: 'text-var-color-5', bgColor: 'bg-var-color-5/10' }
+    const searchItems = getAllDocs()
 
     // Extract title from first h1 or use slug
     const titleMatch = doc.content.match(/^#\s+(.+)$/m)
@@ -236,8 +258,14 @@ export default async function DocPage({ params }: { params: { slug?: string[] } 
                         <span>首页</span>
                     </Link>
                     <DocThemeToggle />
-                    {/* Breadcrumb */}
-                    <div className="hidden sm:flex items-center gap-1 text-sm text-gray-500 font-mono ml-auto">
+
+                    {/* Search Component */}
+                    <div className="flex-1 max-w-sm ml-auto mr-4">
+                        <DocSearch items={searchItems} />
+                    </div>
+
+                    {/* Breadcrumb - Moved to keep layout clean */}
+                    <div className="hidden lg:flex items-center gap-1 text-sm text-gray-500 font-mono">
                         <FileText className="w-4 h-4" />
                         <span>docs</span>
                         {slug.map((s, i) => (

@@ -119,8 +119,17 @@ export function DocSidebar({ toc, relatedDocs, currentDirection, tree, className
             if (element) observer.observe(element)
         })
 
+        // Auto scroll to active path in tree
+        // Not implemented in this useEffect, but handled by the initial render or a separate effect if needed.
+        // Actually, let's just use CSS 'scroll-mt' or a simple ref if we had one.
+        // For simplicity, we assume the user expands the tree, but if we want auto-scroll:
+        const activeLink = document.querySelector(`a[href="${activePath}"]`)
+        if (activeLink) {
+            activeLink.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+
         return () => observer.disconnect()
-    }, [toc])
+    }, [toc, activePath])
 
     // Reading progress
     useEffect(() => {

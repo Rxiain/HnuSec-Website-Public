@@ -52,10 +52,54 @@ export function getDocBySlug(slug: string[]) {
     }
 }
 
-export function getAllDocs() {
-    // Recursive function to get all docs could go here
-    // For now we just need specific retrieval
-    return []
+// Helper to recursively get all docs flattened
+export function getAllDocs(): { title: string; path: string; category: string }[] {
+    const docsDir = path.join(process.cwd(), 'content/docs');
+    const allDocs: { title: string; path: string; category: string }[] = [];
+
+    function scan(dir: string, category: string) {
+        if (!fs.existsSync(dir)) return;
+
+        const items = fs.readdirSync(dir);
+        for (const item of items) {
+            // detailed skip logic
+            if (item.startsWith('.') || item === 'img' || item.endsWith('.assets')) continue;
+
+            const fullPath = path.join(dir, item);
+            const stat = fs.statSync(fullPath);
+
+            if (stat.isDirectory()) {
+                scan(fullPath, category || item);
+            } else if (item.endsWith('.md')) {
+                const relativePath = path.relative(docsDir, fullPath);
+                // Clean path: replace backslashes, remove extension
+                const webPath = '/docs/' + relativePath.replace(/\\/g, '/').replace(/\.md$/, '');
+                // Use filename as title, decode it for display
+                const rawName = item.replace(/\.md$/, '');
+                let title = rawName;
+                try {
+                    title = decodeURIComponent(rawName);
+                } catch (e) { }
+
+                // If filename is Intro/index, maybe use parent dir name or just 'Intro'
+                if (title === 'Intro' || title === 'index') {
+                    // optionally improve title
+                }
+
+                allDocs.push({
+                    title,
+                    path: webPath,
+                    category: category || 'General'
+                });
+            }
+        }
+    }
+
+    if (fs.existsSync(docsDir)) {
+        scan(docsDir, '');
+    }
+
+    return allDocs;
 }
 
 // Extract headings from markdown content for TOC
