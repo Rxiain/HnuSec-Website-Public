@@ -52,10 +52,54 @@ export function getDocBySlug(slug: string[]) {
     }
 }
 
-export function getAllDocs() {
-    // Recursive function to get all docs could go here
-    // For now we just need specific retrieval
-    return []
+// Helper to recursively get all docs flattened
+export function getAllDocs(): { title: string; path: string; category: string }[] {
+    const docsDir = path.join(process.cwd(), 'content/docs');
+    const allDocs: { title: string; path: string; category: string }[] = [];
+
+    function scan(dir: string, category: string) {
+        if (!fs.existsSync(dir)) return;
+
+        const items = fs.readdirSync(dir);
+        for (const item of items) {
+            // detailed skip logic
+            if (item.startsWith('.') || item === 'img' || item.endsWith('.assets')) continue;
+
+            const fullPath = path.join(dir, item);
+            const stat = fs.statSync(fullPath);
+
+            if (stat.isDirectory()) {
+                scan(fullPath, category || item);
+            } else if (item.endsWith('.md')) {
+                const relativePath = path.relative(docsDir, fullPath);
+                // Clean path: replace backslashes, remove extension
+                const webPath = '/docs/' + relativePath.replace(/\\/g, '/').replace(/\.md$/, '');
+                // Use filename as title, decode it for display
+                const rawName = item.replace(/\.md$/, '');
+                let title = rawName;
+                try {
+                    title = decodeURIComponent(rawName);
+                } catch (e) { }
+
+                // If filename is Intro/index, maybe use parent dir name or just 'Intro'
+                if (title === 'Intro' || title === 'index') {
+                    // optionally improve title
+                }
+
+                allDocs.push({
+                    title,
+                    path: webPath,
+                    category: category || 'General'
+                });
+            }
+        }
+    }
+
+    if (fs.existsSync(docsDir)) {
+        scan(docsDir, '');
+    }
+
+    return allDocs;
 }
 
 // Extract headings from markdown content for TOC
@@ -122,4 +166,85 @@ export function getRelatedDocs(currentSlug: string[]): { title: string; path: st
     }
 
     return related.slice(0, 5) // Limit to 5 related articles
+}
+
+export function getAllCategoryDocs() {
+    const categories = ['web', 'pwn', 'crypto', 'reverse', 'misc', 'dev', 'others']
+    const result: Record<string, { text: string; link: string }[]> = {}
+
+    categories.forEach(category => {
+        const dirPath = path.join(docsDirectory, category)
+        if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
+            const files = fs.readdirSync(dirPath)
+            const items = files
+                .filter(file => file.endsWith('.md') || file.endsWith('.pdf'))
+                .map(file => {
+                    const name = file
+                    const slug = file.replace(/\.md$/, '')
+                    // For PDFs or other files, we might want a direct link or a wrapper
+                    // For now, assuming standard doc route for MD files
+                    const link = file.endsWith('.md')
+                        ? `/docs/${category}/${slug}`
+                        : `/docs/${category}/${file}` // You might need a public route for raw assets if they aren't processed pages
+
+                    return { text: name, link }
+                })
+            result[category] = items
+        } else {
+            result[category] = []
+        }
+    })
+
+    return result
+}
+
+export interface DirectoryNode {
+    name: string
+    path: string
+    type: 'file' | 'directory'
+    children?: DirectoryNode[]
+}
+
+export function getDirectoryTree(dirPath: string, rootSlug: string = ''): DirectoryNode[] {
+    const fullPath = path.join(docsDirectory, dirPath)
+    if (!fs.existsSync(fullPath)) return []
+
+    const items = fs.readdirSync(fullPath)
+    const nodes: DirectoryNode[] = []
+
+    items.forEach(item => {
+        // Skip hidden files and system files
+        if (item.startsWith('.') || item === 'Intro.assets' || item === 'img') return
+
+        const itemPath = path.join(fullPath, item)
+        const stats = fs.statSync(itemPath)
+        const relativeSlug = rootSlug ? `${rootSlug}/${item}` : item
+
+        if (stats.isDirectory()) {
+            const children = getDirectoryTree(path.join(dirPath, item), relativeSlug)
+            if (children.length > 0) {
+                nodes.push({
+                    name: item,
+                    path: relativeSlug,
+                    type: 'directory',
+                    children
+                })
+            }
+        } else if (item.endsWith('.md')) {
+            const slug = item.replace('.md', '')
+            // Don't include index.md or README.md if preference, but for now include all
+            nodes.push({
+                name: slug === 'Intro' ? '首页' : slug,
+                path: `/docs/${dirPath.replace(/\\/g, '/')}/${slug}`,
+                type: 'file'
+            })
+        }
+    })
+
+    // Sort: Directories first, then files. Or files first?
+    // Let's sort alphabetically but put directories first
+    return nodes.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name)
+        return a.type === 'directory' ? -1 : 1
+    })
 }

@@ -12,8 +12,5 @@ HnuSec - 海南大学网安实验室 是隶属于海南大学网络空间安全�
 团队荣誉查看战队官网
 
 [战队官网](https://www.hnusec.com/)
-
 [old-战队官网](https://hnusec.github.io/#/)
-
-
 战队公众号HnuSec，欢迎大家交流学习，交流才是最大学习！
