@@ -8,11 +8,21 @@ Misc 是切入 CTF 竞赛领域、培养兴趣的最佳入口。Misc 考察基�
 
 ## 基础
 
-语言的话必须得先学会python（假如不会，可以通过群里的《Python编程：从入门到实践》这本书来入门），python为写解题脚本的基础。当然在日常题目中可能也会出现rust，go等“新语言”。
+首先是最基本的计算机基础知识，比如字节、进制等概念肯定是需要了解的，不然的话听课可以说与听天书无异。
 
-在misc中经常会出现与其他方向混合出现的情况，因此学习misc不仅仅要学习misc的东西，还有连带web，re，cry等共同学习
+语言的话必须得先学会python，当然不需要多精通，有基本的编写能力即可。python为写解题脚本的基础。当然在日常题目中可能也会出现rust，go等“新语言”。
 
-## **:wrench:** Misc手的“工具”
+然后希望想要入门misc方向的师傅们，能够掌握科学上网的方法，掌握主流搜索引擎（bing、google、yandex等），然后善于发问，可以是问培训群里各方向的负责人或者前辈，也可以在一些技术论坛上进行交流（知乎、freebuf、stack overflow等）
+
+当然在发问前，希望大家能掌握好提问的技巧，有的时候巧妙地提问可以省下不少时间，详情查看这篇[提问的智慧 | How-To-Ask-Questions-The-Smart-Way](https://how-to-ask.natro92.fun/)
+
+在misc中经常会出现与其他方向混合出现的情况，因此学习misc不仅仅要学习misc的东西，还有连带web，re，cry等共同学习。
+
+传统的misc涉及文件隐写、文件结构分析、开源情报收集、数据处理、流量分析、内存取证等方向，网上相关的文章和题目都比较丰富完善，感兴趣的可以自行查找一些相关文章去做一些了解。
+
+近年来misc方向还涉及到工控、车联网、AI、区块链等领域，需要misc手在不断学习的过程中逐渐拓宽自己的知识面。
+
+## Misc手的“工具”
 
 MISC是一个对编程能力要求比较高的方向，不过大多数考点的固定衍生出比较多的"轮子"，当然轮子减少手动操作，确实是好东西，但是容易产生一些弊端，因为跳过了手动操作所以不懂原理也能梭题目，可能会导致选手略过本来应该学的原理，手动会做之后再碰到了用工具减少操作是完全没问题的，即便没有这些整合工具，用现成脚本说到底本质也是一样的。
 
@@ -20,15 +30,17 @@ MISC是一个对编程能力要求比较高的方向，不过大多数考点的�
 使用工具获取便利的同时 请不要忽略对原理的学习！！！！！
 ```
 
+**<span style="color:red">以下介绍的工具仅作为一个参考，各取所需即可，不需要全部备齐</span>**
+
 #### ❆ 基础工具
 
 - **基础语言 | 模块**
 
-| 项目名称 | Usage                      | 项目地址                        | 文档 |
-| -------- | -------------------------- | ------------------------------- | ---- |
-| Python   | MISC方向中用途最广的语言。 | [官网](https://www.python.org/) | /    |
+| 项目名称 | Usage                            | 项目地址                           | 文档 |
+| -------- | -------------------------------- | ---------------------------------- | ---- |
+| Python   | MISC方向中用途最广的语言。       | [官网](https://www.python.org/)    | /    |
 | Rust     | 近年来新兴的编程语言，性能优异。 | [官网](https://www.rust-lang.org/) | /    |
-| Go       | 近年来新兴的编程语言，性能优异。 | [官网](https://go.dev/)          | /    |
+| Go       | 近年来新兴的编程语言，性能优异。 | [官网](https://go.dev/)            | /    |
 
 - **编码 / 解码 / 解密 工具**
 
@@ -46,7 +58,7 @@ MISC是一个对编程能力要求比较高的方向，不过大多数考点的�
 | lmHex      | 开源的16进制编辑器。                                         | [Github](https://github.com/WerWolv/ImHex)      |      |
 | WinHex     | 16 进制编辑器为核心的数据处理软件。                          | [官网](https://www.x-ways.net/winhex/)          | /    |
 | Binwalk    | 可识别文件分离提取工具，常用于从文件中提取隐写到其中的其他文件。 | [Github](https://github.com/ReFirmLabs/binwalk) | /    |
-| Foremost   | 用于提取一个文件中包含的多个文件。                           | [Github](https://github.com/korczis/foremost)                                       | /    |
+| Foremost   | 用于提取一个文件中包含的多个文件。                           | [Github](https://github.com/korczis/foremost)   | /    |
 
 - **隐写工具 | 图像 / 音频**
 
@@ -75,28 +87,28 @@ MISC是一个对编程能力要求比较高的方向，不过大多数考点的�
 
 - **取证工具**
 
-| 项目名称                | Usage                                                        | 项目地址                                                     | 文档                                                         |
-| ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Forensics-Wiki          | 取证综合资料库                                               | [官网](https://www.forensics-wiki.com/)                      | /                                                            |
-| **-----密码爆破**       |                                                              |                                                              |                                                              |
-| ZipCenOp                | 伪加密加/解密工具                                            | [Github](https://github.com/442048209as/ZipCenOp)            | /                                                            |
-| ARCHPR                  | 压缩文件密码暴力破解工具。                                   | /                                                            | /                                                            |
-| Ziperello               | zip压缩包密码恢复软件。                                      | /                                                            | /                                                            |
-| Aopr                    | Office文件密码暴力破解工具。                                 | /                                                            | /                                                            |
-| Passware Kit Forensic   | 十分强大的解密工具，各类文件/磁盘密码爆破，密钥搜索等        | /                                                            | - [依依的汉化包](https://blog.csdn.net/u010418732/article/details/120189354)<br />- [汉化版](https://www.mzy0.com/archives/82/) |
-| Hashcat                 | 高性能，GPU/CPU 兼容的本地密码破解，支持多种不同格式         | [Github](https://github.com/hashcat/hashcat)                 | /                                                            |
-| John the Ripper         | 简单易用的离线破解                                           | [Github](https://github.com/openwall/john)                   | /                                                            |
-| Hydra                   | 远程或在线密码的并行暴力破解。                               | [Github](https://github.com/vanhauser-thc/thc-hydra)         | /                                                            |
-| **-----流量分析**       |                                                              |                                                              |                                                              |
-| Wireshark               | 流量分析取证软件。 <img src="./img/windows.svg" width="17" height="17" /> <img src="./img/apple.svg" width="17" height="17" /> | [官网](https://www.wireshark.org/)                           | /                                                            |
-| **-----内存 磁盘 取证** |                                                              |                                                              |                                                              |
-| Volatility              | 内存分析取证软件。 <img src="./img/windows.svg" width="17" height="17" /> <img src="./img/linux.svg" width="17" height="17" /> <img src="./img/apple.svg" width="17" height="17" /> | [官网](https://www.volatilityfoundation.org/)<br />[Github](https://github.com/volatilityfoundation) | /                                                            |
-| MemProcFS               | 新型内存取证框架<img src="./img/windows.svg" width="17" height="17" /> | [Github](https://github.com/ufrisk/MemProcFS)                | /                                                            |
-| NtfsStreamsEditor       | NTFS流分析<img src="./img/windows.svg" width="17" height="17" /> | [官网](https://www.nirsoft.net/utils/alternate_data_streams.html) | /                                                            |
-| R-Studio                | 内存取证tick+磁盘文件恢复分析<img src="./img/windows.svg" width="17" height="17" /> | [官网](https://www.r-studio.com/zhcn/data-recovery-software) | /                                                            |
-| AutoPsy                 | 用来分析磁盘映像和恢复文件的开源取证工具<img src="./img/windows.svg" width="17" height="17" /> | [官网](https://www.autopsy.com/)                             | /                                                            |
-| RegistryExplorer        | 注册表文件分析器<img src="./img/windows.svg" width="17" height="17" /> | [官网](http://www.regxplor.com/download.html)                | /                                                            |
-| PowerToy                | 注册表文件分析器<img src="./img/windows.svg" width="17" height="17" /> | [Github](https://github.com/microsoft/PowerToys)             | /                                                            |
+| 项目名称                | Usage                                                 | 项目地址                                                     | 文档                                                         |
+| ----------------------- | ----------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Forensics-Wiki          | 取证综合资料库                                        | [官网](https://www.forensics-wiki.com/)                      | /                                                            |
+| **-----密码爆破**       |                                                       |                                                              |                                                              |
+| ZipCenOp                | 伪加密加/解密工具                                     | [Github](https://github.com/442048209as/ZipCenOp)            | /                                                            |
+| ARCHPR                  | 压缩文件密码暴力破解工具。                            | /                                                            | /                                                            |
+| Ziperello               | zip压缩包密码恢复软件。                               | /                                                            | /                                                            |
+| Aopr                    | Office文件密码暴力破解工具。                          | /                                                            | /                                                            |
+| Passware Kit Forensic   | 十分强大的解密工具，各类文件/磁盘密码爆破，密钥搜索等 | /                                                            | - [依依的汉化包](https://blog.csdn.net/u010418732/article/details/120189354)<br />- [汉化版](https://www.mzy0.com/archives/82/) |
+| Hashcat                 | 高性能，GPU/CPU 兼容的本地密码破解，支持多种不同格式  | [Github](https://github.com/hashcat/hashcat)                 | /                                                            |
+| John the Ripper         | 简单易用的离线破解                                    | [Github](https://github.com/openwall/john)                   | /                                                            |
+| Hydra                   | 远程或在线密码的并行暴力破解。                        | [Github](https://github.com/vanhauser-thc/thc-hydra)         | /                                                            |
+| **-----流量分析**       |                                                       |                                                              |                                                              |
+| Wireshark               | 流量分析取证软件。                                    | [官网](https://www.wireshark.org/)                           | /                                                            |
+| **-----内存 磁盘 取证** |                                                       |                                                              |                                                              |
+| Volatility              | 内存分析取证软件。                                    | [官网](https://www.volatilityfoundation.org/)<br />[Github](https://github.com/volatilityfoundation) | /                                                            |
+| MemProcFS               | 新型内存取证框架                                      | [Github](https://github.com/ufrisk/MemProcFS)                | /                                                            |
+| NtfsStreamsEditor       | NTFS流分析                                            | [官网](https://www.nirsoft.net/utils/alternate_data_streams.html) | /                                                            |
+| R-Studio                | 内存取证tick+磁盘文件恢复分析                         | [官网](https://www.r-studio.com/zhcn/data-recovery-software) | /                                                            |
+| AutoPsy                 | 用来分析磁盘映像和恢复文件的开源取证工具              | [官网](https://www.autopsy.com/)                             | /                                                            |
+| RegistryExplorer        | 注册表文件分析器                                      | [官网](http://www.regxplor.com/download.html)                | /                                                            |
+| PowerToy                | 注册表文件分析器                                      | [Github](https://github.com/microsoft/PowerToys)             | /                                                            |
 
 #### ❆ 解题工具
 
@@ -113,8 +125,7 @@ MISC是一个对编程能力要求比较高的方向，不过大多数考点的�
 | 文件反转、倒置、导出工具          | [Github](https://github.com/AabyssZG/FileReverse-Tools)      | [AabyssZG (曾哥) )](https://github.com/AabyssZG) |
 | CRC碰撞全自动化脚本               | [Github](https://github.com/AabyssZG/CRC32-Tools)            | [AabyssZG (曾哥) )](https://github.com/AabyssZG) |
 
-## ✒结语
+## 结语
 
 Misc是一个非常有趣的方向，涉及的知识面广泛，能够帮助你更好地理解安全领域的各个方面。希望通过本篇文章，你能对misc有一个初步的了解，并在后续的学习中不断深入。
-
 
