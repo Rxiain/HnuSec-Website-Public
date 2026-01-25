@@ -526,7 +526,7 @@ catch(PDDException $e){
 
 ![Pasted image 20260123104155.png](https://blog.chrizsty.cn/wp-content/uploads/2026/01/Pasted_image_20260123104155.png)
 
-**GBK首字节在 0x81~0xFE 范围内、尾字节在 0x40~0xFE(除了0x7F外) 都可以利用。**
+**GBK首字节在 `0x81~0xFE` 范围内、尾字节在 `0x40~0xFE`(除了`0x7F`外) 都可以利用。**
 
 ## 双引号（16进制绕过）
 ```sql
