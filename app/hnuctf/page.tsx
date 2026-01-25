@@ -7,7 +7,6 @@ import { CyberParticles } from "@/components/cyber-particles"
 import { BackgroundDecoration } from "@/components/background-decoration"
 import { Footer } from "@/components/footer"
 import CurvedLoop from "@/components/curved-loop"
-import SpotlightCard from "@/components/spotlight-card"
 import Link from "next/link"
 import {
   Calendar,
@@ -50,43 +49,39 @@ function CompetitionCard({
   }
 
   return (
-    <SpotlightCard
-      className="bg-white/80 backdrop-blur-md border border-var-color-5/20 p-6 shadow-lg"
-      spotlightColor="rgba(107, 107, 255, 0.15)"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ x: 8 }}
+      transition={{ duration: 0.2 }}
+      className="py-4 border-b border-gray-200 cursor-pointer"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        whileHover={{ y: -5 }}
-        className="cursor-pointer transition-all h-full"
-      >
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-var-color-5/10 flex items-center justify-center">
-              <Flag className="w-6 h-6 text-var-color-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-lg text-gray-900">{title}</h3>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <Calendar className="w-4 h-4" />
-                <span>{date}</span>
-              </div>
-            </div>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-2">
+            <h3 className="font-bold text-xl text-gray-900">{title}</h3>
+            <span className={`px-2 py-0.5 rounded text-xs font-medium ${statusColors[status]}`}>
+              {statusLabels[status]}
+            </span>
           </div>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${statusColors[status]}`}>
-            {statusLabels[status]}
-          </span>
+          <div className="flex items-center gap-4 text-sm text-gray-500 mb-2">
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5" />
+              {date}
+            </span>
+            {participants && (
+              <span className="flex items-center gap-1">
+                <Users className="w-3.5 h-3.5" />
+                {participants} 人参与
+              </span>
+            )}
+          </div>
+          <p className="text-gray-600">{description}</p>
         </div>
-        <p className="text-gray-600 text-sm mb-4">{description}</p>
-        {participants && (
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Users className="w-4 h-4" />
-            <span>{participants} 人参与</span>
-          </div>
-        )}
-      </motion.div>
-    </SpotlightCard>
+        <ArrowRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
+      </div>
+    </motion.div>
   )
 }
 
@@ -188,7 +183,7 @@ export default function HnuCTFPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16"
+            className="flex flex-wrap justify-center gap-8 md:gap-16 mb-16"
           >
             {[
               { icon: Flag, value: "50+", label: "历届题目" },
@@ -196,23 +191,18 @@ export default function HnuCTFPage() {
               { icon: Award, value: "3", label: "届赛事" },
               { icon: Clock, value: "48h", label: "每场时长" },
             ].map((stat, i) => (
-              <SpotlightCard
+              <motion.div
                 key={stat.label}
-                className="bg-white/60 backdrop-blur-md border border-var-color-5/20 p-4 shadow-lg"
-                spotlightColor="rgba(107, 107, 255, 0.15)"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 + i * 0.1 }}
+                className="text-center"
               >
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="text-center h-full"
-                >
-                  <stat.icon className="w-6 h-6 text-var-color-5 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-                  <div className="text-sm text-gray-500">{stat.label}</div>
-                </motion.div>
-              </SpotlightCard>
+                <stat.icon className="w-6 h-6 text-var-color-5 mx-auto mb-2" />
+                <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
+                <div className="text-sm text-gray-500">{stat.label}</div>
+              </motion.div>
             ))}
           </motion.div>
 
@@ -223,32 +213,27 @@ export default function HnuCTFPage() {
           viewport={{ once: true }}
           className="mb-16"
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-2">
             <Target className="w-6 h-6 text-var-color-5" />
             比赛方向
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="flex flex-wrap justify-center gap-6">
             {categories.map((cat, i) => (
-              <SpotlightCard
+              <motion.div
                 key={cat.title}
-                className="bg-white/60 backdrop-blur-md border border-var-color-5/20 p-6 shadow-lg"
-                spotlightColor="rgba(107, 107, 255, 0.15)"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                className="text-center w-36"
               >
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-center h-full"
-                >
-                  <div className="w-14 h-14 mx-auto rounded-xl bg-var-color-5/10 flex items-center justify-center mb-4">
-                    <cat.icon className="w-7 h-7 text-var-color-5" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{cat.title}</h3>
-                  <p className="text-sm text-gray-500">{cat.description}</p>
-                </motion.div>
-              </SpotlightCard>
+                <div className="w-14 h-14 mx-auto rounded-xl bg-var-color-5/10 flex items-center justify-center mb-3">
+                  <cat.icon className="w-7 h-7 text-var-color-5" />
+                </div>
+                <h3 className="font-bold text-gray-900 mb-1">{cat.title}</h3>
+                <p className="text-sm text-gray-500">{cat.description}</p>
+              </motion.div>
             ))}
           </div>
         </motion.div>
