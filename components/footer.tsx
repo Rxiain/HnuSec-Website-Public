@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { Shield, Mail, ExternalLink, X, Code, Heart, Wrench } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+import SpotlightCard from "./SpotlightCard"
 
 // Version info panel component
 function VersionPanel({ isOpen, onClose, onExpand }: { isOpen: boolean; onClose: () => void; onExpand: () => void }) {
@@ -87,95 +88,101 @@ function DetailModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-white rounded-xl shadow-2xl border border-gray-200 p-6 max-w-md w-full mx-4"
+                className="max-w-md w-full mx-4"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg bg-var-color-5/10 border border-var-color-5/30 flex items-center justify-center">
-                            <Shield className="w-7 h-7 text-var-color-5" />
+                <SpotlightCard
+                    className="shadow-2xl p-6"
+                    spotlightColor="rgba(107, 107, 255, 0.2)"
+                    theme="light"
+                >
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg bg-var-color-5/10 border border-var-color-5/30 flex items-center justify-center">
+                                <Shield className="w-7 h-7 text-var-color-5" />
+                            </div>
+                            <div>
+                                <div className="font-bold font-mono text-lg text-gray-900">HnuSec Website</div>
+                                <div className="text-sm text-orange-500 font-mono">v2.0.1</div>
+                            </div>
                         </div>
-                        <div>
-                            <div className="font-bold font-mono text-lg text-gray-900">HnuSec Website</div>
-                            <div className="text-sm text-orange-500 font-mono">v2.0.1</div>
+                        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100">
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {/* Developers */}
+                    <div className="mb-5">
+                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3 font-medium">
+                            <Code className="w-4 h-4 text-var-color-5" />
+                            <span>Developers</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {developers.map((dev) => (
+                                <Link
+                                    key={dev.name}
+                                    href={dev.link}
+                                    target="_blank"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-gray-50 hover:bg-var-color-5/10 hover:text-var-color-5 rounded-lg transition-all duration-200 border border-gray-200 hover:border-var-color-5/30"
+                                >
+                                    <ExternalLink className="w-3 h-3" />
+                                    <span>{dev.name}</span>
+                                </Link>
+                            ))}
                         </div>
                     </div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
-                        <X className="w-5 h-5" />
-                    </button>
-                </div>
 
-                {/* Developers */}
-                <div className="mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                        <Code className="w-4 h-4" />
-                        <span>Developer:</span>
+                    {/* Thanks */}
+                    <div className="mb-5">
+                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3 font-medium">
+                            <Heart className="w-4 h-4 text-red-400" />
+                            <span>Special Thanks</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {thanks.map((t) => (
+                                <Link
+                                    key={t.name}
+                                    href={t.link}
+                                    target="_blank"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-gray-50 hover:bg-var-color-5/10 hover:text-var-color-5 rounded-lg transition-all duration-200 border border-gray-200 hover:border-var-color-5/30"
+                                >
+                                    <ExternalLink className="w-3 h-3" />
+                                    <span>{t.name}</span>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
-                    <div className="flex flex-wrap gap-3">
-                        {developers.map((dev) => (
-                            <Link
-                                key={dev.name}
-                                href={dev.link}
-                                target="_blank"
-                                className="flex items-center gap-1 text-sm text-gray-700 hover:text-var-color-5 transition-colors"
-                            >
-                                <ExternalLink className="w-3 h-3" />
-                                <span>{dev.name}</span>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
 
-                {/* Thanks */}
-                <div className="mb-4">
-                    <div className="flex items-center gap-2 text-sm text-red-400 mb-2">
-                        <Heart className="w-4 h-4" />
-                        <span>Thanks</span>
+                    {/* Technologies */}
+                    <div className="mb-5">
+                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3 font-medium">
+                            <Wrench className="w-4 h-4 text-cyan-500" />
+                            <span>Built With</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {technologies.map((tech) => (
+                                <Link
+                                    key={tech.name}
+                                    href={tech.link}
+                                    target="_blank"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 bg-gray-50 hover:bg-var-color-5/10 hover:text-var-color-5 rounded-lg transition-all duration-200 border border-gray-200 hover:border-var-color-5/30"
+                                >
+                                    <ExternalLink className="w-3 h-3" />
+                                    <span>{tech.name}</span>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
-                    <div className="flex flex-wrap gap-3">
-                        {thanks.map((t) => (
-                            <Link
-                                key={t.name}
-                                href={t.link}
-                                target="_blank"
-                                className="flex items-center gap-1 text-sm text-gray-700 hover:text-var-color-5 transition-colors"
-                            >
-                                <ExternalLink className="w-3 h-3" />
-                                <span>{t.name}</span>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
 
-                {/* Technologies */}
-                <div className="mb-4">
-                    <div className="flex items-center gap-2 text-sm text-cyan-500 mb-2">
-                        <Wrench className="w-4 h-4" />
-                        <span>Technologies</span>
+                    {/* Footer */}
+                    <div className="pt-4 border-t border-gray-100 text-center text-sm text-gray-500">
+                        <p>Official website for HnuSec Team :)</p>
+                        <p className="font-mono text-xs text-gray-400 mt-1">
+                            Build time {buildTime}
+                        </p>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                        {technologies.map((tech) => (
-                            <Link
-                                key={tech.name}
-                                href={tech.link}
-                                target="_blank"
-                                className="flex items-center gap-1 text-sm text-gray-600 hover:text-var-color-5 transition-colors"
-                            >
-                                <ExternalLink className="w-3 h-3" />
-                                <span>{tech.name}</span>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Footer */}
-                <div className="pt-4 border-t border-gray-100 text-center text-sm text-gray-500">
-                    <p>这是一个用于 HnuSec 团队的官方网站 :)</p>
-                    <p className="font-mono text-xs text-gray-400 mt-1">
-                        Build time {buildTime}
-                    </p>
-                </div>
+                </SpotlightCard>
             </motion.div>
         </div>
     )

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import { ExternalLink } from "lucide-react"
 import Image from "next/image"
+import SpotlightCard from "@/components/SpotlightCard"
 
 interface Member {
   id: string
@@ -77,66 +78,39 @@ export function MemberCard({ member }: MemberCardProps) {
   }, [])
 
   return (
-    <motion.div
-      ref={cardRef}
-      className="overflow-hidden rounded-xl bg-white/90 p-6 shadow-sm transition-all hover:shadow-lg hover:bg-white relative border border-var-color-5/30 backdrop-blur-sm"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{
-        opacity: isVisible ? 1 : 0,
-        y: isVisible ? 0 : 20,
-      }}
-      transition={{
-        duration: 0.5,
-        delay: 0.1,
-      }}
+    <SpotlightCard
+      className="!rounded-xl !border-0 !bg-white/90 !p-0 !shadow-none"
+      spotlightColor="rgba(107, 107, 255, 0.2)"
     >
-      {/* Static border with hover effect instead of animated borders */}
-      <div
-        className="absolute inset-0 border border-var-color-5/30 rounded-xl pointer-events-none transition-opacity duration-300"
-        style={{ opacity: isHovered ? 1 : 0 }}
-      />
-
-      {/* Animated background gradient - use CSS instead of motion for better performance */}
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-var-color-5/0 via-var-color-5/5 to-var-color-5/0 pointer-events-none"
-        style={{
-          opacity: isHovered ? 1 : 0,
-          transform: "translateX(-100%)",
-          animation: isHovered ? "shimmer 1.5s infinite" : "none",
-          transition: "opacity 0.3s ease",
+      <motion.div
+        ref={cardRef}
+        className="overflow-hidden rounded-xl bg-transparent p-6 transition-all relative backdrop-blur-sm"
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{
+          opacity: isVisible ? 1 : 0,
+          y: isVisible ? 0 : 20,
         }}
-      />
+        transition={{
+          duration: 0.5,
+          delay: 0.1,
+        }}
+      >
+      {/* Name (ID/别名) at top left - 粗体、大号、左对齐 */}
+      <div className="mb-3 text-left relative z-10">
+        <span className="text-4xl font-black font-mono text-var-color-5 tracking-tight">
+          {member.name}
+        </span>
+        {member.id && (
+          <span className="ml-2 text-sm font-mono text-var-color-5/70">
+            #{member.id}
+          </span>
+        )}
+      </div>
 
-      <div className="flex items-start space-x-4 relative z-10">
-        <div className="relative h-16 w-16 overflow-hidden rounded-full shadow-sm border border-var-color-5/20">
-          <Image
-            src={avatarSrc}
-            alt={member.name}
-            width={64}
-            height={64}
-            className="h-full w-full object-cover"
-            onError={() => {
-              if (avatarSrc !== fallbackAvatar) {
-                setAvatarSrc(fallbackAvatar)
-              }
-            }}
-          />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold">{member.name}</h3>
-            <span
-              className="text-sm font-mono text-var-color-5"
-              style={{
-                opacity: isHovered ? 1 : 0.7,
-                transition: "opacity 0.2s ease",
-              }}
-            >
-              {member.id}
-            </span>
-          </div>
+      <div className="flex items-start justify-end space-x-4 space-x-reverse relative z-10">
+        <div className="flex-1 text-left">
           <div className="mt-2 flex flex-wrap gap-2">
             {member.tags.map((tag, index) => (
               <span
@@ -152,6 +126,20 @@ export function MemberCard({ member }: MemberCardProps) {
               </span>
             ))}
           </div>
+        </div>
+        <div className="relative h-16 w-16 overflow-hidden rounded-full shadow-sm border border-var-color-5/20 flex-shrink-0">
+          <Image
+            src={avatarSrc}
+            alt={member.name}
+            width={64}
+            height={64}
+            className="h-full w-full object-cover"
+            onError={() => {
+              if (avatarSrc !== fallbackAvatar) {
+                setAvatarSrc(fallbackAvatar)
+              }
+            }}
+          />
         </div>
       </div>
       <p className="mt-4 text-sm text-black/80">{member.intro}</p>
@@ -180,5 +168,6 @@ export function MemberCard({ member }: MemberCardProps) {
         </a>
       </div>
     </motion.div>
+    </SpotlightCard>
   )
 }
