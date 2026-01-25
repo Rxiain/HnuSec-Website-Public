@@ -2,7 +2,7 @@
 ## DBMS
 数据库管理系统
 
-![Pasted image 20260123104321.png](../file/web_lesson_2/Pasted_image_20260123104321.png)
+![Pasted image 20260123104321.png](https://blog.chrizsty.cn/wp-content/uploads/2026/01/Pasted_image_20260123104321.png)
 
 当使用用户提供的信息构建对数据库的查询时，恶意用户可以欺骗查询用于原始程序员意图以外的其他用途，从而使用称为 SQL 注入的攻击为用户提供查询数据库的访问权限。 （本次主要针对关于关系型数据库）
 
@@ -163,7 +163,7 @@ table_schema ='test'
 
 可以执行`show variables like"secure_file_priv";`来查看其值。
 
-![Pasted image 20260123104003.png](../file/web_lesson_2/Pasted_image_20260123104003.png)
+![Pasted image 20260123104003.png](https://blog.chrizsty.cn/wp-content/uploads/2026/01/Pasted_image_20260123104003.png)
 
 在联合注入中的应用
 
@@ -302,7 +302,7 @@ $row = mysql_fetch_array($result);
 #### 解题步骤
 这里用一张图来简单表示布尔盲注做题过程
 
-![Pasted image 20260123104046.png](../file/web_lesson_2/Pasted_image_20260123104046.png)
+![Pasted image 20260123104046.png](https://blog.chrizsty.cn/wp-content/uploads/2026/01/Pasted_image_20260123104046.png)
 
 1. 判断数据库类型
 + MySQL数据库表 information_schema.tables
@@ -520,13 +520,13 @@ catch(PDDException $e){
 + \ %5c
 + %df\' %df%5c' -> 運'
 
-![Pasted image 20260123104143.png](../file/web_lesson_2/Pasted_image_20260123104143.png)
+![Pasted image 20260123104143.png](https://blog.chrizsty.cn/wp-content/uploads/2026/01/Pasted_image_20260123104143.png)
 
 其实这个是浏览器显示编码的问题，我们将浏览器编码切换为GB2312即简体中文，如下就正常了。
 
-![Pasted image 20260123104155.png](../file/web_lesson_2/Pasted_image_20260123104155.png)
+![Pasted image 20260123104155.png](https://blog.chrizsty.cn/wp-content/uploads/2026/01/Pasted_image_20260123104155.png)
 
-**GBK首字节在 0x81~0xFE 范围内、尾字节在 0x40~0xFE(除了0x7F外) 都可以利用。**
+**GBK首字节在 `0x81~0xFE` 范围内、尾字节在 `0x40~0xFE`(除了`0x7F`外) 都可以利用。**
 
 ## 双引号（16进制绕过）
 ```sql
