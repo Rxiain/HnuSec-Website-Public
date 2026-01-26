@@ -1,22 +1,14 @@
-# 歪补？Web！
-在Web方向中，CTF 题本质是 “模拟真实 Web 漏洞攻防”，聚焦于网站与Web服务的安全问题，题目会搭建一个存在漏洞的网站 / Web服务，要求你利用漏洞获取 flag 。
-
-+ CTF Web方向 & 护网行动
-+ 考研、保研、就业
-+ 入门简单 & 进阶有难度
-+ 坚持 & 肯吃苦 & 多问多交流
-
 # HTTP
 ## 什么是HTTP协议？
 **HTTP (HyperText Transfer Protocol)**，即超文本传输协议，是互联网上应用最为广泛的一种网络协议。它定义了浏览器（客户端）与服务器之间如何交换数据。HTTP 工作在 TCP/IP 模型之上，通常使用端口 80。  
 
-**什么是超文本？ **包含超链接的文本
-
-欢迎访问[HnuSec](https://www.hnusec.com/)
+**什么是超文本？**
 
 ```java
 <a href="https://www.hnusec.com">HnuSec</a>
 ```
+
+欢迎访问[HnuSec](https://www.hnusec.com/)
 
 按**TCP/IP 四层模型** 进行分类 ：
 
@@ -32,15 +24,8 @@
 ### HTTP 请求和响应
 HTTP 的基本工作原理是客户端（通常是 web 浏览器）向服务器发送请求，服务器接收到请求后，返回相应的资源。这些资源可以是网页、图像、音频文件、视频等。  
 
-> B/S结构（Browser/Server，浏览器/服务器模式），是目前互联网应用最主流的软件架构模式。  
->
-> 简单来说，你在电脑或手机上通过浏览器访问网站（如百度、淘宝、Bilibili）的这种模式，就是典型的 B/S 结构。  
->
-> 骨架(B/S结构)与血液(HTTP)
->
-
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126141752601.png)
+![](https://cdn.nlark.com/yuque/0/2026/png/54428404/1769059606588-2ecc33e2-3bc9-464b-89c9-8ba9373d0803.png)
 
 + 建立连接。
 + 客户端发送 HTTP 请求。
@@ -50,7 +35,7 @@ HTTP 的基本工作原理是客户端（通常是 web 浏览器）向服务器�
 **无状态保存**
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126141824413.png)
+![](https://cdn.nlark.com/yuque/0/2026/png/54428404/1769185645641-09b4f251-fed2-4546-80bc-61f78639bb9d.png)
 
 ### URL
 **URL** 的全称是 **Uniform Resource Locator**，中文译为 **统一资源定位符**。  
@@ -71,21 +56,12 @@ HTTP 的基本工作原理是客户端（通常是 web 浏览器）向服务器�
 | **锚点** | 指向页面内的特定位置（如某个标题），数据不发送给服务器。 | `#section` |
 
 
- 当你访问 `https://www.hnusec.com/members?_rsc=vusbg` 时，HTTP 协议会将 URL 拆解并填入报文中  
+ 当你访问 `http://www.example.com/index.php?id=1` 时，HTTP 协议会将 URL 拆解并填入报文中  
 
 #### URL编码
 URL编码（也称为百分比编码）是一种将数据转换为可以安全包含在URL中的格式的编码方式。它用于
 
 处理可能在URL中无效或有特殊含义的字符，例如空格、非ASCII字符和特殊符号。
-
-**标志性的前缀：**`**%**`
-
-```java
-空格 → %20
-# → %23
-& → %26
-中 → %E4%B8%AD
-```
 
 **1. 安全字符（无需编码）**
 
@@ -99,7 +75,7 @@ URL编码（也称为百分比编码）是一种将数据转换为可以安全�
 
 + **空格**：编码为 `%20` 或 `+`。
 + **非安全字符**：具有特殊语法的符号，如 `!`, `@`, `#`, `$`, `%`, `^`, `&`, `*`, `()`, `{}`, `[]`, `|`, `\` 等。
-+ **非 ASCII 字符（如中文）**：所有非 ASCII 字符都会编码为 `%` 后跟 UTF-8 编码的十六进制值。
++ **非 ASCII 字符**：所有非 ASCII 字符都会编码为 `%` 后跟 UTF-8 编码的十六进制值。
 
 ### HTTP 请求与响应的结构
 **1. HTTP 请求的结构**
@@ -121,7 +97,7 @@ Connection: keep-alive
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126141858623.png)
+![](https://cdn.nlark.com/yuque/0/2026/png/54428404/1769185823444-f41acd04-b690-41b4-abf2-1695c1b500fa.png)
 
 **2. HTTP 响应的结构**
 
@@ -211,15 +187,11 @@ username=admin&password=123456
 ● image/gif ：gif图片格式
 ● image/jpeg ：jpg图片格式
 ● image/png：png图片格式
-表单提交类：
-● application/x-www-form-urlencoded：默认的表单提交方式，数据被编码为键值对，用 & 分隔，如 name=admin&pass=123。
-● multipart/form-data：文件上传
-● application/json：JSON 数据，常用于API 接口调用
 ```
 
  3. 认证与状态类  
 
-+ **Cookie**:  HTTP 是“无状态”的，客户端存储并发送给服务器的键值对数据，常用于维持登录状态或追踪用户。
++ **Cookie**: 客户端存储并发送给服务器的键值对数据，常用于维持登录状态或追踪用户。
 + **Authorization**: 用于提供服务器验证身份所需的凭证（如 Basic 认证或 Bearer Token）。
 
  4. 安全与特殊类  
@@ -245,45 +217,10 @@ username=admin&password=123456
 **2. HTTP 状态码**
 
 + 1xx（信息性状态码）：表示接收的请求正在处理。
-
-```plain
-100 Continue：请求的初步部分已接收，客户端应继续发送请求。
-101 Switching Protocols：服务器同意切换协议。
-```
-
 + 2xx（成功状态码）：表示请求正常处理完毕。
-
-```plain
-200 OK：请求成功，具体内容取决于HTTP方法（如GET、POST）。
-201 Created：请求成功并创建了新资源。
-204 No Content：请求成功但无返回内容。
-```
-
 + 3xx（重定向状态码）：需要后续操作才能完成这一请求。
-
-```plain
-301 Moved Permanently：资源已永久移动到新位置。
-302 Found：资源临时移动到新位置。
-304 Not Modified：资源未修改，可使用缓存版本。
-```
-
 + 4xx（客户端错误状态码）：表示请求包含语法错误或无法完成。
-
-```plain
-400 Bad Request：请求语法错误或无效。
-401 Unauthorized：需要身份验证。
-403 Forbidden：服务器拒绝请求，客户端无权限访问。
-404 Not Found：资源未找到。
-```
-
 + 5xx（服务器错误状态码）：服务器在处理请求的过程中发生了错误。
-
-```plain
-500 Internal Server Error：服务器遇到未知错误。
-502 Bad Gateway：网关或代理收到无效响应。
-503 Service Unavailable：服务器暂时不可用（如维护或过载）。
-504 Gateway Timeout：网关超时未收到响应。
-```
 
 ## HTTP与HTTPS
 **HTTPS（超文本传输安全协议，Hypertext Transfer Protocol Secure）**是 HTTP 的安全版本，它在 HTTP 下增加了 **SSL/TLS** 协议，提供了**数据加密、完整性校验和身份验证**。HTTPS 通常使用端口 443。  
@@ -296,7 +233,7 @@ username=admin&password=123456
 + **数据完整性 (Integrity)**：防止数据在传输过程中被暗中修改。如果数据被动过，接收方会立即发现。
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126141919965.png)
+![](https://cdn.nlark.com/yuque/0/2026/webp/54428404/1769080176533-2995bf0f-5f85-4dcd-a5e1-5bdd797183a3.webp)
 
 ## 题目演示
 HTTP签到题
@@ -312,15 +249,15 @@ HTTP签到题
 **开源免费、一切皆文件**
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126141936978.png)
+![](https://cdn.nlark.com/yuque/0/2026/png/54428404/1769083245577-be3956a4-da40-496b-beda-f2472092ad5f.png)
 
 **常见的 Linux 发行版**
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126141951446.png)
+![](https://cdn.nlark.com/yuque/0/2026/png/54428404/1769182920646-81bddf94-5ffc-4a9b-842e-caf1fb56dc38.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126142006765.png)
+![](https://cdn.nlark.com/yuque/0/2026/jpeg/54428404/1769183112809-8812d90a-2d01-4797-a756-5a325d16a237.jpeg)
 
 **Ubuntu** - 以其用户友好性、强大的社区支持和丰富的软件库而闻名。[https://ubuntu.com/](https://ubuntu.com/)
 
@@ -330,7 +267,7 @@ HTTP签到题
 
 + VMware虚拟机
 + WSL：WSL（Windows Subsystem for Linux，Windows 下的 Linux 子系统）是 Microsoft 提供的一种功能，允许用户在不使用虚拟机或双系统的情况下，在 Windows 上运行原生的 Linux 环境。它使开发者可以直接在 Windows 中运行 Linux 命令行工具、脚本和程序，同时与 Windows 文件系统无缝集成。
-+ 服务器平台 VPS
++ 服务器平台
 
 **Linux 文件系统结构 ** 
 
@@ -344,7 +281,7 @@ Linux 不像 Windows 分为 C 盘、D 盘，它是一个**倒树状结构**。
 + 绝对路径： 从根目录 `/` 开始的完整路径，例如 `/etc/passwd`。
 + 相对路径： 相对于当前目录的路径，例如 `documents/file.txt`（如果当前目录是 `/home/user`）
 + <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126142019261.png)
+![](https://cdn.nlark.com/yuque/0/2026/jpeg/54428404/1769083929927-67932333-0ad5-4f00-ba4b-a3d5db24a881.jpeg)
 + `**/**`** (根目录)**：所有目录的起点。
 + `**/bin**`** & **`**/usr/bin**`：存放常用命令（二进制文件）。
 + `**/etc**`：存放系统配置文件（相当于 Windows 的注册表）。
@@ -353,7 +290,7 @@ Linux 不像 Windows 分为 C 盘、D 盘，它是一个**倒树状结构**。
 + `**/var**`：存放经常变动的文件，如系统日志（log）、缓存文件和网站数据。
 + `**/tmp**`：存放临时文件的地方，任何用户都能在此存取，系统重启通常会清空。
 + <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126142031899.png)
+![](https://cdn.nlark.com/yuque/0/2026/png/54428404/1769083962566-e7f4d15e-b554-43c3-9663-8cdaf342d638.png)
 
 ## 基础命令
 在 Windows 或 macOS 中，图形界面是系统不可分割的一部分。但在 Linux 中：
@@ -365,7 +302,6 @@ Linux 不像 Windows 分为 C 盘、D 盘，它是一个**倒树状结构**。
 ● ls：列出当前目录的文件和文件夹。
 ● ls -l：以详细列表形式显示。
 ● ls -a：显示所有文件，包括隐藏文件。
-● ls /：列出根目录内容
 
 2. cd：切换目录
 ● cd 目录名：进入指定目录。
@@ -403,25 +339,42 @@ Linux 不像 Windows 分为 C 盘、D 盘，它是一个**倒树状结构**。
 11. chmod：修改权限
 ● chmod +x script.sh：给文件添加可执行权限。
 
-12. ifconfig / ip a：查看网络信息
+12. ps：查看进程
+● ps aux：查看所有进程。
+● ps -ef | grep nginx：查找特定进程。
+
+13. top / htop：查看系统运行状况
+● top：实时显示进程状态。
+● htop：更好用的 top（需安装）。
+
+14. netstat / ss：查看网络连接
+● netstat -anp：查看监听端口与进程（老旧系统）。
+● ss -tunlp：查看网络服务（更现代、推荐）。
+
+15. ifconfig / ip a：查看网络信息
 ● ifconfig：旧命令，显示 IP 信息。
 ● ip a：现代命令，等效于 ifconfig。
 
-13. wget / curl：下载文件
+16. wget / curl：下载文件
 ● wget http://example.com/file
 ● curl http://example.com/file -o file
 
-14. uname：查看系统信息
+17. uname：查看系统信息
 ● uname -a：显示内核和架构等信息。
 
-15. whoami：查看当前用户名
+18. whoami：查看当前用户名
 
-16. find：查找文件
+19. find：查找文件
 ● find / -name flag.txt：全盘搜索 flag 文件。
-● find / -user root -perm -4000 -print> result.txt 提权
 
-17. grep：搜索字符串
-● grep root /etc/passwd：在系统的用户信息文件中查找名为 root 的账户信息。
+20. grep：搜索字符串
+● grep root /etc/passwd：搜索包含 root 的行。
+
+21. export：设置环境变量
+● export PATH=$PATH:/new/path
+
+22. which / whereis：查命令路径
+● which python：查看可执行路径。
 ```
 
 # PHP基础
@@ -582,7 +535,7 @@ assert ( mixed $assertion [, string $description ] ) : bool
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/jatopos/my-image-bed/2026.1/20260126142057773.png)
+![](https://cdn.nlark.com/yuque/0/2026/png/54428404/1769155029502-74eafc20-cb05-4a65-bb71-803e359f8f26.png)
 
 ### 命令执行函数
 #### 有回显
@@ -597,9 +550,6 @@ system — 执行外部程序，并且显示输出
 command：执行command参数所指定的命令，并且输出执行结果
 
 如果提供return_code参数，则外部命令执行后的返回状态将会被设置到此变量中。
-
-+ `**0**`：表示命令**成功**执行。
-+ **非 **`**0**`（通常是 1-255）：表示命令**失败**或出现了异常。不同的数字代表不同的错误类型。
 
 举例：
 
@@ -651,7 +601,7 @@ pcntl_exec — 在当前进程空间执行指定程序
 ```java
 <?php
 // 执行 ls 命令，列出当前目录的文件
-pcntl_exec("/bin/ls", ["/"]);  #ls /
+pcntl_exec("/bin/ls", ["-l"]);  #ls -l
 
 // 如果 pcntl_exec 执行成功，以下代码不会被执行
 echo "bxbxbxbxbxbxbxbx"; 
@@ -660,8 +610,6 @@ echo "bxbxbxbxbxbxbxbx";
 
 #### 无回显
 1. **exec()**
-
-exec — 执行一个外部程序
 
 ```java
  exec(string $command, array &$output = null, int &$result_code = null): string|false
@@ -705,8 +653,6 @@ print_r($output);
 print_r(exec('whoami'));
 ```
 
-或者 反弹shell，需要公网ip
-
 2. **shell_exec() 与 反引号(` `)**
 
 shell_exec — 通过 shell 执行命令并将完整的输出以字符串的方式返回
@@ -719,18 +665,13 @@ shell_exec — 通过 shell 执行命令并将完整的输出以字符串的方�
 
 ```php
 <?php
-$a = shell_exec('whoami');
-$b = `whoami`;
-echo $a;
-echo $b;
+$abc=`whoami`;
+echo $abc;
 ```
 
 3. **popen() 与 proc_open()**
 
 popen — 打开进程文件指针
-
-> 在操作系统中执行一个命令，并打开一个连接到该命令的“管道”（Pipe），让你能像读写普通文件一样与这个进程交互。
->
 
 ```php
 popen ( string $command , string $mode ) : resource
@@ -745,12 +686,14 @@ proc_open()：与popen()类似
 
 ```php
 <?php
-$cmd = "whoami";      // 接收用户传入的命令
+highlight_file(__FILE__);
+$cmd = $_GET["cmd"];      // 接收用户传入的命令
 $ben = popen($cmd, 'r');  // 以只读模式打开进程管道
 while($s = fgets($ben)){  // 循环读取管道中的每一行输出
     print_r($s);          // 打印输出结果
 }
 ?>
+// 攻击测试：?cmd=whoami
 ```
 
 ## 常见的绕过
@@ -810,34 +753,22 @@ system($cmd);
 ```
 
 ### L3--文件名过滤绕过
-例如：flag被ban 利用终端特性
-
- [RCE-labs]Level 5  
+例如：flag被ban
 
 ```java
-if(preg_match("/flag/", $cmd)){
-    die("WAF!");
-}
-system($cmd);
+preg_match("/flag/", $cmd)
 ```
-
-> preg_match — 执行匹配正则表达式
->
-> 如果 `pattern` 匹配到指定 `subject`，则 **preg_match()** 返回 1，如果没有匹配到则返回 0， 或者在失败时返回 `[**false**](https://www.php.net/manual/zh/reserved.constants.php#constant.false)`。  
->
-
-[正则表达式 – 语法 | 菜鸟教程](https://www.runoob.com/regexp/regexp-syntax.html)
 
 #### 1.通配符绕过
 *（星号）: 匹配零个或多个字符。例子: fl*
 
 ?（问号）: 匹配单个字符。例子: fla?
 
-[]（方括号）: 匹配方括号内的任意一个字符。例子: fla[g,1,2,3]
+[]（方括号）: 匹配方括号内的任意一个字符。例子: file[1-3].txt。
 
-[^]（取反方括号）: 匹配不在方括号内的字符。例子: fla[^a-c]
+[^]（取反方括号）: 匹配不在方括号内的字符。例子: file[^a-c].txt。
 
-{}（大括号）: 匹配大括号内的任意一个字符串。例子: fla{g,1,2,3}
+{}（大括号）: 匹配大括号内的任意一个字符串。例子: file{1,2,3}.txt。
 
 #### 2.单引号双引号绕过
 单引号(')双引号("")反引号(``)绕过正则 如 f''lag或f'l'ag
@@ -846,7 +777,7 @@ system($cmd);
 反斜杠\绕过 如cat fl\ag.p\hp
 
 #### 4.特殊变量
-特殊变量：$1到$9、$@和$***  **如 fl$*ag fl$9ag
+特殊变量：$1到$9、$@和$*** **如fl$*ag fl$9ag
 
 或者在单词结尾处插入$x，这里的x可以是任意字母，例如可以写成如下形式：
 
@@ -881,6 +812,8 @@ lo
 即flag.php
 ```
 
+ [RCE-labs]Level 5  
+
 ### L4--空格过滤绕过
 有时候会禁用空格
 
@@ -888,20 +821,29 @@ lo
 preg_match("/ /", $cmd)
 ```
 
- [RCE-labs]Level 7  
-
 可以用以下方法绕过
 
 ```java
 1.URL编码：%09 tab %0a 换行 %0d 回车符 %20 空格
 
+
 2.$IFS$9，${IFS}，$IFS，${IFS%??}，$'\x20'
 在 Bash、sh 等 Shell 环境中，IFS 定义了当 shell 解析字符串时用来分隔字段的字符。默认值是一个空格（space）、制表符（tab）和换行符（newline）。
 
+                       
 3.大括号{} 如{cat,flag.php}  该语法只在 bash 中生效。  
-     
+
+           
 4.重定向字符<，<> 如cat<>flag.txt，或者cat<flag.txt
+
+           
+5.环境变量组合，如${PATH:0:1}，${HOME:0:1}
+
+
+6.base64编码执行 echo bHM= | base64 -d | bash
 ```
+
+ [RCE-labs]Level 7  
 
 ### L5--常见文件读取命令绕过
 题目有时会禁用cat这种常见的文件读取命令，该怎么办呢？
@@ -922,7 +864,7 @@ od : 以二进制的方式读取档案内容；
 ?cmd=passthru("od -A d -c flag.php");
 ```
 
-xxd : 读取二进制文件,把文件转换成十六进制形式；
+xxd : 读取二进制文件；
 
 ```java
 ?cmd=passthru("xxd flag.php");
@@ -941,10 +883,16 @@ uniq : 报告或删除文件中重复的行；
 ?cmd=passthru("uniq flag.php");
 ```
 
+file-f : 报错出具体内容；
+
+```java
+?cmd=passthru("file-f flag.php");
+```
+
 grep：在文本中查找指定的字符串；
 
 ```java
-?cmd=passthru("grep Hnu flag"); #从flag文本文件中搜索包含"Hnu"字符串的行
+?cmd=passthru("grep fla fla*"); #从fla*文本文件中搜索包含"fla"字符串的行
 ?cmd=passthru("grep { fla*"); #搜索{
 ```
 
@@ -958,7 +906,7 @@ grep：在文本中查找指定的字符串；
 >
 
 ```plain
-echo "Y2F0IGZsYWcudHh0Cg==" | base64 -d #解码读取命令
+echo "Y2F0IGZsYWcudHh0Cg==" | base64-d #解码读取命令
 即cat flag.txt
 echo "Y2F0IGZsYWcudHh0Cg==" | base64 -d | bash #执行命令
 |把cat flag.php，放在bash里执行
@@ -992,7 +940,7 @@ $(echo xxxx|base64 -d)
 
 + 无参数RCE
 + 无字母数字命令执行（异或、取反、自增）
-+ 无回显的命令执行 & 反弹shell
++ 无回显的命令执行&反弹shell
 + 常见的php语言漏洞
 
 # 作业
